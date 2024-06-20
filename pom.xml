@@ -8,10 +8,10 @@
 		<version>3.3.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.savemoney.co.kr</groupId>
-	<artifactId>main</artifactId>
+	<groupId>com.savmoney.co</groupId>
+	<artifactId>kr</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>main</name>
+	<name>kr</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -30,10 +30,6 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
-		<!-- <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jdbc</artifactId>
-		</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -44,12 +40,11 @@
 			<version>3.0.3</version>
 		</dependency> -->
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
+		<!-- <dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc11</artifactId>
 			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -83,6 +78,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		
 	</build>
 
 </project>
