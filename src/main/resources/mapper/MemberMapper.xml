@@ -3,10 +3,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.savemoney.co.kr.mapper.MemberMapper">
-    <select id="joinMember" parameterType="com.savemoney.co.kr.dto.MemberDTO">
+    
+    <insert id="joinMember" parameterType="MemberDTO">
         
-        INSERT INTO MEMBERS(MEMBERID, MEMBERPWD, PHONENUMBER, EMAIL, ADRESS)
-        VALUES (#{memberId}, #{memberpwd}, #{phonenumber}, #{email}, #{address})
+        INSERT INTO MEMBERS(MEMBERID, MEMBERPWD, PHONENUMBER, EMAIL, ADDRESS)
+        VALUES (#{memberId}, #{memberPwd}, #{phoneNumber}, #{email}, #{address})
+
+    </insert>
+
+    <select id="findId" parameterType="String" resultType="java.lang.String">
+        
+        SELECT MEMBERID
+        FROM MEMBERS
+        WHERE MEMBERID = #{memberId}
 
     </select>
+
+    <select id="findPwd" parameterType="String" resultType="MemberDTO">
+        
+        SELECT MEMBERID
+        FROM MEMBERS
+        WHERE MEMBERID = #{memberId} and MEMBERPWD = #{memberPwd}
+
+    </select>
+
 </mapper>
