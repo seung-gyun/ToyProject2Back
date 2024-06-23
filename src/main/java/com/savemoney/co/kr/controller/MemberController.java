@@ -27,7 +27,7 @@ public class MemberController {
     MemberService memberService;
 
     @PostMapping("/savemoney/joinmember")
-    public ResponseEntity<String> postLogin(@RequestBody MemberDTO memberDTO, HttpServletResponse res) {
+    public ResponseEntity<String> postJoinmember(@RequestBody MemberDTO memberDTO, HttpServletResponse res) {
         
         try {
             
@@ -59,10 +59,24 @@ public class MemberController {
     @PostMapping("/savemoney/login")
     public ResponseEntity<?> postJoinMember(@RequestBody Map<String, String> params, HttpServletResponse res) {
         
-        // String user = params.get("email");
-        // String password = params.get("password");
+        String chkId = memberService.memberLogin(params);
+        String msg = null; // 데이터가 없을 경우 null
 
-        return ResponseEntity.ok().body("test");
+        try {
+            
+            //DB에 저장되어 있으면 로그인 처리 2024.06.23
+            if (chkId == null) msg = "입력한 정보가 올바르지 않습니다.";  // 2024. 06. 23 wingerms 공통
+            
+            return ResponseEntity.ok().body(msg);
+
+        } catch (Exception e) {
+            
+            logger.debug("postJoinMember Controller Error",e);
+            throw e;
+
+        }
+
+                
     }
 
     @GetMapping("/savemoney/findpwd")

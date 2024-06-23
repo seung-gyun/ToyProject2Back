@@ -27,4 +27,12 @@
 
     </select>
 
+    <select id="memberLogin" parameterType="Map" resultType="java.lang.String">
+        
+        SELECT MEMBERID
+        FROM MEMBERS
+        WHERE MEMBERID = #{memberId} and MEMBERPWD = #{memberPwd}
+
+    </select>
+
 </mapper>

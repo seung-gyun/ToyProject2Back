@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.savemoney.co.kr.Securityutil.SecurityUtil;
 import com.savemoney.co.kr.Service.MemberService;
 import com.savemoney.co.kr.dto.MemberDTO;
 import com.savemoney.co.kr.mapper.MemberMapper;
-import com.savemoney.co.kr.util.LoginSecServiceImpl;
 
 @Service
 public class MemberServiceImpl implements MemberService{
@@ -28,7 +28,7 @@ public class MemberServiceImpl implements MemberService{
         try {
             
             //password를 암호화하는 수단 필요
-            String encryptPwd = LoginSecServiceImpl.pwdEncryt(memberDTO.getMemberPwd());
+            String encryptPwd = SecurityUtil.pwdEncryt(memberDTO.getMemberPwd());
             memberDTO.setMemberPwd(encryptPwd);
 
             memberMapper.joinMember(memberDTO);
@@ -41,6 +41,7 @@ public class MemberServiceImpl implements MemberService{
 
     }
 
+    @Override
     public String findId(String  memberId){
 
         try {
@@ -54,10 +55,9 @@ public class MemberServiceImpl implements MemberService{
             
         }
 
-
-
     }
 
+    @Override
     public String findPwd(String memberId, String email){
 
 
@@ -73,24 +73,29 @@ public class MemberServiceImpl implements MemberService{
         }
     }
     
-    public String memberLogin(Map<String, String> params) throws NoSuchAlgorithmException{
+    @Override
+    public String memberLogin(Map<String, String> params){
 
         try {
             
             String pwd = params.get("password");
-            String encryptPwd = LoginSecServiceImpl.pwdEncryt(pwd);
+
+            //password를 암호화하는 수단 필요
+            String encryptPwd = SecurityUtil.pwdEncryt(pwd);
 
             params.remove("password");
             params.put("memberPwd", encryptPwd);
 
-            //password를 암호화하는 수단 필요
-            
-
             return memberMapper.memberLogin(params);
 
-        } catch (Exception e) {
+        // 알고리즘 암호화 실패시
+        } catch (NoSuchAlgorithmException e) {
+            logger.error("memberLogin Encryption algorithm not found", e);
+            throw new RuntimeException("Encryption algorithm not found", e);
+        }
+        catch (Exception e) {
             
-            logger.error("login joinMember Service Error",e);
+            logger.error("memberLogin Service Error",e);
             throw e;
 
         }
