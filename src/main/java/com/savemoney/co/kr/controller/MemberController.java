@@ -1,5 +1,6 @@
 package com.savemoney.co.kr.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.savemoney.co.kr.Service.MemberService;
 import com.savemoney.co.kr.dto.MemberDTO;
+import com.savemoney.co.kr.jwtUtil.JwtUtil;
+import com.savemoney.co.kr.service.MemberService;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -25,6 +28,9 @@ public class MemberController {
 
     @Autowired
     MemberService memberService;
+
+    @Autowired
+    JwtUtil jwtUtil;
 
     @PostMapping("/savemoney/joinmember")
     public ResponseEntity<String> postJoinmember(@RequestBody MemberDTO memberDTO, HttpServletResponse res) {
@@ -41,10 +47,18 @@ public class MemberController {
             
             if(id!=null)                                  //D DB에서 가져오지 못하면 null처리가 난다.
                 msg = "중복된 아이디가 존재합니다.";        // wingers 2024.06.22 공통으로 만들자.
-            else 
+            else{
+
+                // 회원가입시 토큰 발급 후 메인페이지 이동
+                String token = jwtUtil.getToken("id", id); // Jwt 토큰 발급
+                Cookie cookie = new Cookie("token", token); // Jwt 비교를 쿠키값 비교
+                cookie.setHttpOnly(true); // Xss 예방
+
+                res.addCookie(cookie);
+
                 memberService.joinMember(memberDTO);
-            
-                
+            }
+
             return ResponseEntity.status(HttpStatus.OK).body(msg);
 
         } catch (Exception e) {
@@ -57,17 +71,22 @@ public class MemberController {
     }
   
     @PostMapping("/savemoney/login")
-    public ResponseEntity<?> postJoinMember(@RequestBody Map<String, String> params, HttpServletResponse res) {
+    public ResponseEntity<?> postJoinMember(@RequestBody Map<String, String> params) {
         
         String chkId = memberService.memberLogin(params);
         String msg = null; // 데이터가 없을 경우 null
 
+        Map<String, Object> response = new HashMap<>();
+
         try {
-            
+
             //DB에 저장되어 있으면 로그인 처리 2024.06.23
             if (chkId == null) msg = "입력한 정보가 올바르지 않습니다.";  // 2024. 06. 23 wingerms 공통
             
-            return ResponseEntity.ok().body(msg);
+            response.put("memberId",chkId);
+            response.put("msg",msg);
+
+            return ResponseEntity.ok().body(response);
 
         } catch (Exception e) {
             
