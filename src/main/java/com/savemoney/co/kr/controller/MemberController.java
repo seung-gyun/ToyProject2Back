@@ -8,16 +8,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.savemoney.co.kr.dto.MemberDTO;
 import com.savemoney.co.kr.jwtUtil.JwtUtil;
 import com.savemoney.co.kr.service.MemberService;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -71,7 +72,7 @@ public class MemberController {
     }
   
     @PostMapping("/savemoney/login")
-    public ResponseEntity<?> postJoinMember(@RequestBody Map<String, String> params) {
+    public ResponseEntity<?> postJoinMember(@RequestBody Map<String, String> params, HttpServletResponse res) {
         
         String chkId = memberService.memberLogin(params);
         String msg = null; // 데이터가 없을 경우 null
@@ -80,10 +81,29 @@ public class MemberController {
 
         try {
 
+
+
             //DB에 저장되어 있으면 로그인 처리 2024.06.23
             if (chkId == null) msg = "입력한 정보가 올바르지 않습니다.";  // 2024. 06. 23 wingerms 공통
             
-            response.put("memberId",chkId);
+            // 로그인 성공 시 jwt 넣기
+            else{
+
+                //id를 통해서 token값 얻기
+                String token = jwtUtil.getToken("memberId", chkId);
+
+                Cookie cookie = new Cookie("token", token);
+
+                // XSS 방지
+                cookie.setHttpOnly(true);
+                
+                cookie.setPath("/"); //해당 도메인의 모든 경로에서 쿠키가 유효하도록 설정하는 것을 의미
+                res.addCookie(cookie);// JWT 쿠키에 넣기 
+
+                response.put("memberId",chkId);
+
+            }
+
             response.put("msg",msg);
 
             return ResponseEntity.ok().body(response);
@@ -98,10 +118,31 @@ public class MemberController {
                 
     }
 
-    @GetMapping("/savemoney/findpwd")
-    public ResponseEntity<?> getFindPwd(@RequestParam String memberId, @RequestParam String email, HttpServletResponse res) {
+    @GetMapping("/savemoney/check")
+    public ResponseEntity<?> getChk(@CookieValue(value="token", required = false) String token) { // cookie에 토큰값 확인
         
-        return ResponseEntity.ok().body("test");
+        Claims claims = jwtUtil.getClaims(token);
+
+		if(claims!=null){
+
+			String memberId = claims.get("memberId").toString();
+
+			return ResponseEntity.ok().body(memberId);
+		}
+
+		return ResponseEntity.ok().body(0);
     }    
+
+    @PostMapping("/savemoney/logout")
+	public ResponseEntity<?> logout(HttpServletResponse res) {
+
+        Cookie cookie = new Cookie("token", null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+
+        res.addCookie(cookie);
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
 
 }
