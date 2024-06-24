@@ -1,5 +1,6 @@
 package com.savemoney.co.kr.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -122,12 +123,23 @@ public class MemberController {
     public ResponseEntity<?> getChk(@CookieValue(value="token", required = false) String token) { // cookie에 토큰값 확인
         
         Claims claims = jwtUtil.getClaims(token);
+        Map<String, Object> response = new HashMap<>();
 
 		if(claims!=null){
 
 			String memberId = claims.get("memberId").toString();
 
-			return ResponseEntity.ok().body(memberId);
+            Date expiration = claims.getExpiration();
+            Date now = new Date();
+
+            long remainingTimeInMillis = expiration.getTime() - now.getTime();
+            long remainingTimeInSeconds = remainingTimeInMillis/1000;
+
+            
+            response.put("memberId", memberId);
+            response.put("remainingTime", remainingTimeInSeconds);
+
+			return ResponseEntity.status(HttpStatus.OK).body(response);
 		}
 
 		return ResponseEntity.ok().body(0);
