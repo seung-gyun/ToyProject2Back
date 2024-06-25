@@ -71,25 +71,17 @@ public class JwtUtil {
                                     .parseClaimsJws(token)
                                     .getBody();
                 
-                if(claims!=null)
-                    return claims;
-                
+                return claims;
 
             } catch (ExpiredJwtException e) {
-                
-                logger.debug("jwtUtil ExpiredJwtException Error", e);
-                throw e;
-
+                return null;
             } catch (JwtException e){
-                
-                logger.debug("jwtUtil JwtException Error", e);
-                throw e;
-
+                return null;
             }
 
         }
 
-        return null; //wingerms 2024.06.23 null여기 두는 것 확인
+        return null; // 이 부분 생각 //2024.06.25 wingerms
 
     }
 

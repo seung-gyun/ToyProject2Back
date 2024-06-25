@@ -33,6 +33,15 @@ public class MemberController {
     @Autowired
     JwtUtil jwtUtil;
 
+    @PostMapping("/")
+    public ResponseEntity<?> postJoinmember() {
+
+
+        
+        return ResponseEntity.status(HttpStatus.OK).body(0);
+
+    }
+
     @PostMapping("/savemoney/joinmember")
     public ResponseEntity<String> postJoinmember(@RequestBody MemberDTO memberDTO, HttpServletResponse res) {
         
@@ -72,7 +81,7 @@ public class MemberController {
     }
   
     @PostMapping("/savemoney/login")
-    public ResponseEntity<?> postJoinMember(@RequestBody Map<String, String> params, HttpServletResponse res) {
+    public ResponseEntity<?> postloginMember(@RequestBody Map<String, String> params, HttpServletResponse res) {
         
         String chkId = memberService.memberLogin(params);
         String msg = null; // 데이터가 없을 경우 null
