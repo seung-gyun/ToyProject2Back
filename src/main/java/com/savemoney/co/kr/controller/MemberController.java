@@ -1,6 +1,4 @@
 package com.savemoney.co.kr.controller;
-
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +11,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.savemoney.co.kr.dto.MemberDTO;
@@ -45,7 +44,7 @@ public class MemberController {
             //초기화
             String msg = "";                
 
-            id = memberService.findId(id);
+            id = memberService.findDuple(id); //중복체크
             
             if(id!=null)                                  //D DB에서 가져오지 못하면 null처리가 난다.
                 msg = "중복된 아이디가 존재합니다.";        // wingers 2024.06.22 공통으로 만들자.
@@ -123,23 +122,12 @@ public class MemberController {
     public ResponseEntity<?> getChk(@CookieValue(value="token", required = false) String token) { // cookie에 토큰값 확인
         
         Claims claims = jwtUtil.getClaims(token);
-        Map<String, Object> response = new HashMap<>();
 
 		if(claims!=null){
 
 			String memberId = claims.get("memberId").toString();
 
-            Date expiration = claims.getExpiration();
-            Date now = new Date();
-
-            long remainingTimeInMillis = expiration.getTime() - now.getTime();
-            long remainingTimeInSeconds = remainingTimeInMillis/1000;
-
-            
-            response.put("memberId", memberId);
-            response.put("remainingTime", remainingTimeInSeconds);
-
-			return ResponseEntity.status(HttpStatus.OK).body(response);
+			return ResponseEntity.status(HttpStatus.OK).body(memberId);
 		}
 
 		return ResponseEntity.ok().body(0);
@@ -155,6 +143,54 @@ public class MemberController {
         res.addCookie(cookie);
         return new ResponseEntity<>(HttpStatus.OK);
 
+    }
+
+    @GetMapping("/savemoney/findId")
+    public ResponseEntity<?> getfindId(@RequestParam("email") String email, @RequestParam("phoneNumber") String phoneNumber) { 
+        
+        try {
+        
+            String memberId = memberService.findId(email, phoneNumber);
+
+            if(memberId!=null){
+                return ResponseEntity.ok().body(memberId);    
+            }else{
+                return ResponseEntity.ok().body(0); // 우선은 성공처리
+            }
+
+            
+
+        } catch (Exception e) {
+            
+            logger.debug("getfindId Controller Error",e);
+            throw e;
+
+        }
+		
+    }
+
+    @GetMapping("/savemoney/findPwd")
+    public ResponseEntity<?> getfindPwd(@RequestParam("memberId") String memberId, @RequestParam("email") String email) { 
+        
+        try {
+        
+            String chkResetPwd = memberService.findPwd(memberId, email);
+
+            if(chkResetPwd!=null){
+                return ResponseEntity.ok().body(chkResetPwd);    
+            }else{
+                return ResponseEntity.ok().body(0); // 우선은 성공처리
+            }
+
+            
+
+        } catch (Exception e) {
+            
+            logger.debug("getfindPwd Controller Error",e);
+            throw e;
+
+        }
+		
     }
 
 }

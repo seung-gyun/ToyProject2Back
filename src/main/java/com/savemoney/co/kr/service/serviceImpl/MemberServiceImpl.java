@@ -1,6 +1,8 @@
 package com.savemoney.co.kr.service.serviceImpl;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Date;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -42,15 +44,32 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public String findId(String  memberId){
+    public String findId(String email, String phoneNumber){
 
         try {
         
-            return memberMapper.findId(memberId);
+            return memberMapper.findId(email, phoneNumber);
+            
 
         } catch (Exception e) {
             
             logger.error("login findId Service Error",e);
+            throw e;
+            
+        }
+
+    }
+
+    @Override
+    public String findDuple(String memberId){
+
+        try {
+        
+            return memberMapper.findDuple(memberId);
+
+        } catch (Exception e) {
+            
+            logger.error("login findId duplicate Service Error",e);
             throw e;
             
         }
@@ -63,14 +82,52 @@ public class MemberServiceImpl implements MemberService{
 
         try {
         
-            return memberMapper.findPwd(memberId, email);
-
-        } catch (Exception e) {
+             char[] charSet = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9','A', 'B', 'C', 'D', 'E', 
+            'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 
+            'y', 'z','!', '@', '#', '$', '%', '^', '&' };
             
-            logger.error("login findPwd Service Error",e);
+            String findPwd = memberMapper.findPwd(memberId, email);
+            String memberPwd = "";
+
+            if(findPwd!=null){
+
+                StringBuffer sb = new StringBuffer();        
+                SecureRandom sr = new SecureRandom();        
+                sr.setSeed(new Date().getTime());  
+
+                int idx = 0;        
+                int len = charSet.length;        
+                for (int i=0; i<10; i++) {         
+
+                    idx = sr.nextInt(len);    // 강력한 난수를 발생시키기 위해 SecureRandom을 사용한다.            
+                    sb.append(charSet[idx]);
+
+                }
+
+                memberPwd = sb.toString();
+                memberMapper.resetPwd(memberId, SecurityUtil.pwdEncryt(memberPwd));
+
+                return memberPwd;
+
+            }else{
+
+                //null
+                return memberPwd;
+
+            }
+
+        }
+        catch (NoSuchAlgorithmException e) {
+            logger.error("findPwd Encryption algorithm not found", e);
+            throw new RuntimeException("Encryption algorithm not found", e);
+        }
+        catch (Exception e) {
+            
+            logger.error("findPwd Service Error",e);
             throw e;
             
-        }
+        } 
     }
     
     @Override
@@ -101,5 +158,7 @@ public class MemberServiceImpl implements MemberService{
         }
 
     }    
+
+    
 
 }

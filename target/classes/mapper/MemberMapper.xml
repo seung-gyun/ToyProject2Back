@@ -11,7 +11,7 @@
 
     </insert>
 
-    <select id="findId" parameterType="String" resultType="java.lang.String">
+    <select id="findDuple" parameterType="String" resultType="java.lang.String">
         
         SELECT MEMBERID
         FROM MEMBERS
@@ -19,11 +19,11 @@
 
     </select>
 
-    <select id="findPwd" parameterType="String" resultType="MemberDTO">
+    <select id="findId" parameterType="String" resultType="java.lang.String">
         
         SELECT MEMBERID
         FROM MEMBERS
-        WHERE MEMBERID = #{memberId} and MEMBERPWD = #{memberPwd}
+        WHERE email = #{email} and phoneNumber = #{phoneNumber}
 
     </select>
 
@@ -34,5 +34,21 @@
         WHERE MEMBERID = #{memberId} and MEMBERPWD = #{memberPwd}
 
     </select>
+
+    <select id="findPwd" parameterType="String" resultType="java.lang.String">
+        
+        SELECT MEMBERID
+        FROM MEMBERS
+        WHERE MEMBERID = #{memberId} and EMAIL = #{email}
+
+    </select>
+
+    <update id="resetPwd" parameterType="String">
+        
+        UPDATE MEMBERS
+        SET MEMBERPWD = #{memberPwd}
+        WHERE MEMBERID = #{memberId}
+
+    </update>
 
 </mapper>
