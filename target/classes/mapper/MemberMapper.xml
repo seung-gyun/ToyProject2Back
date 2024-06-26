@@ -51,4 +51,12 @@
 
     </update>
 
+    <select id="findUserDetail" parameterType="String" resultType="com.savemoney.co.kr.springsecurity.CustomUserDetail">
+        
+        SELECT MEMBERID AS USERNAME, MEMBERPWD AS PASSWORD
+        FROM MEMBERS
+        WHERE MEMBERID = #{memberId}
+
+    </select>
+
 </mapper>

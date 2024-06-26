@@ -8,6 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.savemoney.co.kr.decencutil.SecurityUtil;
@@ -23,6 +24,9 @@ public class MemberServiceImpl implements MemberService{
     @Autowired
     MemberMapper memberMapper;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     // 멤버 insert
     @Override
     public void joinMember(MemberDTO memberDTO){
@@ -30,8 +34,7 @@ public class MemberServiceImpl implements MemberService{
         try {
             
             //password를 암호화하는 수단 필요
-            String encryptPwd = SecurityUtil.pwdEncryt(memberDTO.getMemberPwd());
-            memberDTO.setMemberPwd(encryptPwd);
+            memberDTO.setMemberPwd(passwordEncoder.encode(memberDTO.getMemberPwd())); 
 
             memberMapper.joinMember(memberDTO);
 

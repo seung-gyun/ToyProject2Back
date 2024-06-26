@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.exceptions.PersistenceException;
 
 import com.savemoney.co.kr.dto.MemberDTO;
+import com.savemoney.co.kr.springsecurity.CustomUserDetail;
 
 @Mapper
 public interface MemberMapper {
@@ -16,5 +17,6 @@ public interface MemberMapper {
     public String findPwd(String memberId, String email) throws PersistenceException;
     public void resetPwd(String memberId, String memberPwd) throws PersistenceException;
     public String memberLogin(Map<String, String> params) throws PersistenceException;
+    public CustomUserDetail findUserDetail(String memberId);
 
 }
