@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -20,9 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig
-{
-    
+public class SecurityConfig{
     
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -51,6 +50,11 @@ public class SecurityConfig
     }
 
     @Bean
+    public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return new CustomAuthenticationSuccessHandler();
+    }   
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
@@ -61,7 +65,8 @@ public class SecurityConfig
                 )
                 .formLogin(form -> form
                         .loginPage("/savemoney/login")
-                        .defaultSuccessUrl("/savemoney", true)
+                        .defaultSuccessUrl("/savemoney/login", true)
+                        .successHandler(customAuthenticationSuccessHandler()) // 커스텀 성공 핸들러 설정
                         .permitAll()
                 )
                 .logout(logout -> logout
