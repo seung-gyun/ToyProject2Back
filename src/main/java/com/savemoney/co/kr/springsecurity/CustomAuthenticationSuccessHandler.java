@@ -1,34 +1,48 @@
 package com.savemoney.co.kr.springsecurity;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import com.savemoney.co.kr.jwtUtil.JwtUtil;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
+        @Autowired
+        JwtUtil jwtUtil;
+
+    
         @Override
-        public void onAuthenticationSuccess(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, Authentication authentication) throws IOException, jakarta.servlet.ServletException {
+        public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse res, Authentication authentication) throws IOException, ServletException {
         
-        // 사용자 정보 얻기
+        //성공했으니 authentication을 통해서 아이디 가져올 수 있다.
         String username = authentication.getName();
         
-        // 로그 추가
-        System.out.println("로그인 성공: " + username);
+        // 로그인 성공 시 jwt 넣기
+
+        //id를 통해서 token값 얻기
+        String token = jwtUtil.getToken("memberId", username);
+        Cookie cookie = new Cookie("token", token);
+
+        // XSS 방지
+        cookie.setHttpOnly(true);
         
-        // 세션에 사용자 이름 저장
-        request.getSession().setAttribute("username", username);
+        cookie.setPath("/"); //해당 도메인의 모든 경로에서 쿠키가 유효하도록 설정하는 것을 의미
+        res.addCookie(cookie);// JWT 쿠키에 넣기 
 
-        // 클라이언트로부터 리다이렉트 URL 얻기 (필요시 쿼리 파라미터 또는 세션 사용)
-        String redirectUrl = request.getParameter("redirectUrl");
-        if (redirectUrl == null || redirectUrl.isEmpty()) {
-            redirectUrl = "http://localhost:3000"; // 기본 리다이렉트 URL
-        }
+        //JSON 형태로 반환
+        res.setStatus(HttpServletResponse.SC_OK);
+        res.getWriter().write(username);
+        res.getWriter().flush();
 
-        // 성공 후 리다이렉트
-        response.sendRedirect(redirectUrl);
+        }            
 
-        // throw new UnsupportedOperationException("Unimplemented method 'onAuthenticationSuccess'");
     }
-}
    
