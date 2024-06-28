@@ -1,7 +1,6 @@
 package com.savemoney.co.kr.springsecurity;
 import java.util.Arrays;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +40,7 @@ public class SecurityConfig{
         filter.setAuthenticationManager(authenticationManager);
         filter.setAuthenticationSuccessHandler(customAuthenticationSuccessHandler());
         filter.setAuthenticationFailureHandler(customAuthenticationFailureHandler());
+        filter.setFilterProcessesUrl("/savemoney/login");
         return filter;
     }
 
@@ -89,12 +89,13 @@ public class SecurityConfig{
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 설정 안 함
+                     
                 .authorizeHttpRequests(requests -> requests
                 .anyRequest().permitAll()
                 // .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
-                        .loginPage("/savemoney/login")
+                        .loginPage("/login")
                         .defaultSuccessUrl("/savemoney/login", true)
                         .successHandler(customAuthenticationSuccessHandler()) // 커스텀 성공 핸들러 설정
                         .failureHandler(customAuthenticationFailureHandler()) // 커스텀 실패 핸들러 설정정
@@ -103,7 +104,7 @@ public class SecurityConfig{
                 .logout(logout -> logout.permitAll());
                 
                 http.addFilterBefore(customUsernamePasswordAuthenticationFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class);
-
+          
 
         return http.build();
     }

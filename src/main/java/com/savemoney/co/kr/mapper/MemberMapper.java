@@ -17,6 +17,5 @@ public interface MemberMapper {
     public String findPwd(String memberId, String email) throws PersistenceException;
     public void resetPwd(String memberId, String memberPwd) throws PersistenceException;
     public String memberLogin(Map<String, String> params) throws PersistenceException;
-    public CustomUserDetail findUserDetail(String memberId);
-
+    public CustomUserDetail findUserDetail(String memberId) throws PersistenceException;
 }

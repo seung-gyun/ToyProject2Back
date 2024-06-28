@@ -31,14 +31,6 @@ public class MemberController {
     @Autowired
     JwtUtil jwtUtil;
 
-
-    // @GetMapping("/savemoney")
-    // public ResponseEntity<?> postJoinmember() {
-
-    //     return ResponseEntity.status(HttpStatus.OK).body(0);
-
-    // }
-
     @PostMapping("/savemoney/joinmember")
     public ResponseEntity<String> postJoinmember(@RequestBody MemberDTO memberDTO, HttpServletResponse res) {
         
@@ -76,53 +68,6 @@ public class MemberController {
         }
         
     }
-  
-    // @GetMapping("/savemoney/login")
-    // public ResponseEntity<?> postloginMember(@RequestParam String error, HttpServletResponse res) {
-        
-    //     //String chkId = memberService.memberLogin(params);
-    //     String msg = null; // 데이터가 없을 경우 null
-
-    //     Map<String, Object> response = new HashMap<>();
-
-    //     try {
-
-
-
-    //         //DB에 저장되어 있으면 로그인 처리 2024.06.23
-    //         // if (chkId == null) msg = "입력한 정보가 올바르지 않습니다.";  // 2024. 06. 23 wingerms 공통
-            
-    //         // // 로그인 성공 시 jwt 넣기
-    //         // else{
-
-    //         //     //id를 통해서 token값 얻기
-    //         //     String token = jwtUtil.getToken("memberId", chkId);
-
-    //         //     Cookie cookie = new Cookie("token", token);
-
-    //         //     // XSS 방지
-    //         //     cookie.setHttpOnly(true);
-                
-    //         //     cookie.setPath("/"); //해당 도메인의 모든 경로에서 쿠키가 유효하도록 설정하는 것을 의미
-    //         //     res.addCookie(cookie);// JWT 쿠키에 넣기 
-
-    //         //     response.put("memberId",chkId);
-
-    //         // }
-
-    //         // response.put("msg",msg);
-
-    //         return ResponseEntity.ok().body(response);
-
-    //     } catch (Exception e) {
-            
-    //         logger.debug("postJoinMember Controller Error",e);
-    //         throw e;
-
-    //     }
-
-                
-    // }
 
     @GetMapping("/savemoney/check")
     public ResponseEntity<?> getChk(@CookieValue(value="token", required = false) String token) { // cookie에 토큰값 확인

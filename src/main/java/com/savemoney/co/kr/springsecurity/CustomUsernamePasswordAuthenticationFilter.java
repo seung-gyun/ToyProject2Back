@@ -19,7 +19,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
     
     public CustomUsernamePasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
         super.setAuthenticationManager(authenticationManager);
-        setFilterProcessesUrl("/savemoney/login");
+        // setFilterProcessesUrl("/savemoney/login");
     }
 
     @Override
