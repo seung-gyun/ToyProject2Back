@@ -1,5 +1,7 @@
 package com.savemoney.co.kr.controller;
 
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,14 @@ public class MemberController {
 
     @Autowired
     JwtUtil jwtUtil;
+
+    @PostMapping("/savemoney/login")
+	public Void test(HttpServletResponse res) throws IOException {
+
+        res.sendRedirect("http://localhost:3000/");
+        return null;
+
+    }
 
     @PostMapping("/savemoney/joinmember")
     public ResponseEntity<String> postJoinmember(@RequestBody MemberDTO memberDTO, HttpServletResponse res) {
@@ -87,11 +97,17 @@ public class MemberController {
     @PostMapping("/savemoney/logout")
 	public ResponseEntity<?> logout(HttpServletResponse res) {
 
-        Cookie cookie = new Cookie("token", null);
-        cookie.setPath("/");
-        cookie.setMaxAge(0);
+        Cookie tokenCookie = new Cookie("token", null);
+        tokenCookie.setPath("/");
+        tokenCookie.setMaxAge(0);
 
-        res.addCookie(cookie);
+        Cookie JseesionIdCookie = new Cookie("JSESSIONID", null);
+        JseesionIdCookie.setPath("/");
+        JseesionIdCookie.setMaxAge(0);
+
+        res.addCookie(tokenCookie);
+        res.addCookie(JseesionIdCookie);
+        
         return new ResponseEntity<>(HttpStatus.OK);
 
     }

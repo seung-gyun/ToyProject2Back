@@ -20,10 +20,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     
     @Autowired
     CustomUserDetailsService customUserDetailsService;
-
-    // @Autowired
-    // passwordEncoder passwordEncoder;
-
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     
 

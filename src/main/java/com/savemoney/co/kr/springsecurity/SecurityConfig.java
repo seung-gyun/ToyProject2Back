@@ -13,10 +13,15 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -30,8 +35,23 @@ public class SecurityConfig{
     
     
     @Bean
+    public RequestCache requestCache() {
+        return new HttpSessionRequestCache();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
+    }
+
+    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
     }
 
     @Bean
@@ -80,6 +100,8 @@ public class SecurityConfig{
     public AuthenticationFailureHandler customAuthenticationFailureHandler() {
         return new CustomAuthenticationFailuerHandler();
     }
+
+
    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -87,10 +109,16 @@ public class SecurityConfig{
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling((exceptionHandling) ->
+                    exceptionHandling
+                    .authenticationEntryPoint(authenticationEntryPoint())
+                    .accessDeniedHandler(accessDeniedHandler()))
+                
                 .sessionManagement(session -> session
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 설정 안 함
                      
                 .authorizeHttpRequests(requests -> requests
+                .requestMatchers("/savemoney/board").authenticated()
                 .anyRequest().permitAll()
                 // .anyRequest().permitAll()
                 )
@@ -100,9 +128,14 @@ public class SecurityConfig{
                         .successHandler(customAuthenticationSuccessHandler()) // 커스텀 성공 핸들러 설정
                         .failureHandler(customAuthenticationFailureHandler()) // 커스텀 실패 핸들러 설정정
                         .permitAll()
+                ).securityContext(securityContext -> securityContext
+                .securityContextRepository(new HttpSessionSecurityContextRepository())
+                )
+                .requestCache(requestCacheConfigurer -> 
+                requestCacheConfigurer.requestCache(requestCache()) // RequestCache 설정
                 )
                 .logout(logout -> logout.permitAll());
-                
+                                
                 http.addFilterBefore(customUsernamePasswordAuthenticationFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class);
           
 
