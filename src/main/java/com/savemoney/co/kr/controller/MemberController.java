@@ -59,11 +59,11 @@ public class MemberController {
             else{
 
                 // 회원가입시 토큰 발급 후 메인페이지 이동
-                String token = jwtUtil.getToken("id", id); // Jwt 토큰 발급
-                Cookie cookie = new Cookie("token", token); // Jwt 비교를 쿠키값 비교
-                cookie.setHttpOnly(true); // Xss 예방
+                // String token = jwtUtil.getToken("id", id); // Jwt 토큰 발급
+                // Cookie cookie = new Cookie("token", token); // Jwt 비교를 쿠키값 비교
+                // cookie.setHttpOnly(true); // Xss 예방
 
-                res.addCookie(cookie);
+                // res.addCookie(cookie);
 
                 memberService.joinMember(memberDTO);
             }
@@ -87,7 +87,6 @@ public class MemberController {
 		if(claims!=null){
 
 			String memberId = claims.get("memberId").toString();
-
 			return ResponseEntity.status(HttpStatus.OK).body(memberId);
 		}
 

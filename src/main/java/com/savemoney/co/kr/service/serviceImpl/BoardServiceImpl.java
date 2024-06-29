@@ -34,4 +34,52 @@ public class BoardServiceImpl implements BoardService{
         }
     }
 
+    @Override
+    public void registerNotice(BoardDTO boardDTO){
+        try {
+            
+            boardMapper.registerNotice(boardDTO);
+
+        } catch (Exception e) {
+            
+            logger.debug("registerNotice BoardServiceImpl Error ",e);
+            throw e;
+
+        }
+    };
+
+    @Override
+    public BoardDTO detailNotice(int boardId){
+        try {
+            
+            BoardDTO boardDto = boardMapper.detailNotice(boardId);
+
+            return boardDto;
+
+        } catch (Exception e) {
+            
+            logger.debug("detailNotice BoardServiceImpl Error ",e);
+            throw e;
+
+        }
+    };
+
+    @Override
+    public void increaseCount(int boardId){
+
+        try {
+            
+            boardMapper.increaseCount(boardId);
+
+        } catch (Exception e) {
+            
+            logger.debug("increaseCount BoardServiceImpl Error ",e);
+            throw e;
+
+        }
+
+    }
+
 }
+
+

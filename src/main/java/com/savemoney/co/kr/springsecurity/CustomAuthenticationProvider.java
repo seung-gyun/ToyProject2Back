@@ -30,7 +30,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
 
         UserDetails user = customUserDetailsService.loadUserByUsername(username);
-
         try {
             
             if (user == null || !passwordEncoder.matches(password, user.getPassword())) {

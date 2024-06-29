@@ -51,6 +51,14 @@
 
     </update>
 
+    <update id="increaseCount" parameterType = "String">
+        
+        UPDATE BOARD
+        SET VIEWCOUNT = VIEWCOUNT + 1
+        WHERE BOARDID = #{boardId}
+
+    </update>
+
     <select id="findUserDetail" parameterType="String" resultType="com.savemoney.co.kr.springsecurity.CustomUserDetail">
         
         SELECT MEMBERID AS USERNAME, MEMBERPWD AS PASSWORD

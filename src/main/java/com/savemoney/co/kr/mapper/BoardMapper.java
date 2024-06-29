@@ -11,5 +11,8 @@ import com.savemoney.co.kr.dto.BoardDTO;
 public interface BoardMapper {
 
    List<BoardDTO> boardList() throws PersistenceException;
-
+   void registerNotice(BoardDTO boardDTO) throws PersistenceException;
+   BoardDTO detailNotice(int boardId) throws PersistenceException;
+   void increaseCount(int boardId) throws PersistenceException;
+   
 }

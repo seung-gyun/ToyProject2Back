@@ -119,6 +119,7 @@ public class SecurityConfig{
                      
                 .authorizeHttpRequests(requests -> requests
                 .requestMatchers("/savemoney/board").authenticated()
+                .requestMatchers("/savemoney/registernotice").authenticated()
                 .anyRequest().permitAll()
                 // .anyRequest().permitAll()
                 )

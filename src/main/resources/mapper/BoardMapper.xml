@@ -7,9 +7,32 @@
     <select id="boardList" resultType="BoardDTO">
         
         SELECT BOARDID, TITLE, MEMBERID, TO_CHAR(CREATEDDATE, 'YYYY-MM-DD') AS CREATEDDATE, VIEWCOUNT
-        FROM BOARD
+        FROM BOARD 
+        ORDER BY CREATEDDATE DESC
 
     </select>
   
+    <select id="detailNotice" resultType = "BoardDTO" parameterType="java.lang.Integer">
+        
+        SELECT TITLE, MEMBERID, CONTENT
+        FROM BOARD
+        WHERE BOARDID = #{boardId}
+
+    </select>
+
+    <insert id="registerNotice" parameterType="BoardDTO">
+        
+        INSERT INTO BOARD(TITLE, CONTENT, MEMBERID) 
+        VALUES( #{title}, #{content}, #{memberId} )
+
+    </insert>
+
+    <update id="increaseCount" parameterType = "Integer">
+        
+        UPDATE BOARD
+        SET VIEWCOUNT = VIEWCOUNT + 1
+        WHERE BOARDID = #{boardId}
+
+    </update>
 
 </mapper>
