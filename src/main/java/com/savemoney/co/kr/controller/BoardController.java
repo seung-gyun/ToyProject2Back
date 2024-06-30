@@ -6,6 +6,7 @@ import com.savemoney.co.kr.dto.BoardDTO;
 import com.savemoney.co.kr.service.BoardService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,13 +31,25 @@ public class BoardController {
     BoardService boardService;
 
     @GetMapping("/savemoney/board")
-    public ResponseEntity<?> getMethodName() {
+    public ResponseEntity<?> getMethodName(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
         
         try {
             
+            Map<String, Object> boardListPage = new HashMap<>();
             List<BoardDTO> boardList = new ArrayList<>();
-            boardList = boardService.boardList();
-            return ResponseEntity.status(HttpStatus.OK).body(boardList);
+
+            int totalPage = boardService.totalBoardList();
+            int firstSize = (page - 1) * size + 1;
+            int lastSize = page * size;
+
+            boardListPage.put("totalPage", totalPage);
+            boardListPage.put("firstSize", firstSize);
+            boardListPage.put("lastSize", lastSize);
+
+            boardList = boardService.boardList(firstSize, lastSize);
+            boardListPage.put("boardList", boardList);
+
+            return ResponseEntity.status(HttpStatus.OK).body(boardListPage);
 
         } catch (Exception e) {
             

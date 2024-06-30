@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -114,8 +113,8 @@ public class SecurityConfig{
                     .authenticationEntryPoint(authenticationEntryPoint())
                     .accessDeniedHandler(accessDeniedHandler()))
                 
-                .sessionManagement(session -> session
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 설정 안 함
+                // .sessionManagement(session -> session
+                //     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 설정 안 함
                      
                 .authorizeHttpRequests(requests -> requests
                 .requestMatchers("/savemoney/board").authenticated()
@@ -124,7 +123,7 @@ public class SecurityConfig{
                 // .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
+                        .loginPage("login")
                         .defaultSuccessUrl("/savemoney/login", true)
                         .successHandler(customAuthenticationSuccessHandler()) // 커스텀 성공 핸들러 설정
                         .failureHandler(customAuthenticationFailureHandler()) // 커스텀 실패 핸들러 설정정

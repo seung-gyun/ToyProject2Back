@@ -8,8 +8,9 @@ import com.savemoney.co.kr.dto.BoardDTO;
 
 public interface BoardService {
 
-    List<BoardDTO> boardList();
+    List<BoardDTO> boardList(int firstSize, int lastSize);
     void registerNotice(BoardDTO boardDTO);
     BoardDTO detailNotice(int boardId);
     void increaseCount(int boardId);
+    int totalBoardList();
 } 

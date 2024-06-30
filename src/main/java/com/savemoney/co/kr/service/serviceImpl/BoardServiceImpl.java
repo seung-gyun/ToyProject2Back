@@ -21,10 +21,10 @@ public class BoardServiceImpl implements BoardService{
     BoardMapper boardMapper;
 
     @Override
-    public List<BoardDTO> boardList() {
+    public List<BoardDTO> boardList(int firstSize, int lastSize) {
         try {
             
-            return boardMapper.boardList();
+            return boardMapper.boardList(firstSize, lastSize);
 
         } catch (Exception e) {
 
@@ -79,7 +79,22 @@ public class BoardServiceImpl implements BoardService{
         }
 
     }
+    
+    @Override
+    public int totalBoardList(){
 
+        try {
+            
+            return boardMapper.totalBoardList();
+
+        } catch (Exception e) {
+            
+            logger.debug("increaseCount BoardServiceImpl Error ",e);
+            throw e;
+
+        }
+
+    }
 }
 
 

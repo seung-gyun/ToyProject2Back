@@ -10,9 +10,10 @@ import com.savemoney.co.kr.dto.BoardDTO;
 @Mapper
 public interface BoardMapper {
 
-   List<BoardDTO> boardList() throws PersistenceException;
+   List<BoardDTO> boardList(int firstSize, int lastSize) throws PersistenceException;
    void registerNotice(BoardDTO boardDTO) throws PersistenceException;
    BoardDTO detailNotice(int boardId) throws PersistenceException;
    void increaseCount(int boardId) throws PersistenceException;
+   int totalBoardList() throws PersistenceException ;
    
 }

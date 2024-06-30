@@ -4,15 +4,27 @@
 
 <mapper namespace="com.savemoney.co.kr.mapper.BoardMapper">
     
-    <select id="boardList" resultType="BoardDTO">
+    <select id="totalBoardList">
+    
+        SELECT COUNT(*)
+        FROM BOARD
+
+    </select>
+
+    <select id="boardList" parameterType = "java.lang.Integer" resultType="BoardDTO">
         
-        SELECT BOARDID, TITLE, MEMBERID, TO_CHAR(CREATEDDATE, 'YYYY-MM-DD') AS CREATEDDATE, VIEWCOUNT
-        FROM BOARD 
-        ORDER BY CREATEDDATE DESC
+        <![CDATA[
+        SELECT RNUM, BOARDID, TITLE, MEMBERID, CREATEDDATE, VIEWCOUNT
+        FROM (
+            SELECT BOARDID, TITLE, MEMBERID, TO_CHAR(CREATEDDATE, 'YYYY-MM-DD') AS CREATEDDATE, VIEWCOUNT, ROW_NUMBER() OVER (ORDER BY CREATEDDATE DESC) AS RNUM
+            FROM BOARD
+        )
+        WHERE ${firstSize} <= RNUM AND RNUM <= ${lastSize}
+        ]]>
 
     </select>
   
-    <select id="detailNotice" resultType = "BoardDTO" parameterType="java.lang.Integer">
+    <select id="detailNotice" parameterType="java.lang.Integer" resultType = "BoardDTO">
         
         SELECT TITLE, MEMBERID, CONTENT
         FROM BOARD
