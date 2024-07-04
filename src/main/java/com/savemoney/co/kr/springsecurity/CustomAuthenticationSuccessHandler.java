@@ -54,7 +54,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
             goToUrl = savedRequest.getRedirectUrl().toString();
 
-            if(referrer.equals(goToUrl)){
+            if(!referrer.equals(goToUrl)){
             
                 Pattern pattern = Pattern.compile("/board");
                 Matcher matcher = pattern.matcher(goToUrl);

@@ -49,6 +49,34 @@ public class BoardServiceImpl implements BoardService{
     };
 
     @Override
+    public void updateNotice(BoardDTO boardDTO){
+        try {
+            
+            boardMapper.updateNotice(boardDTO);
+
+        } catch (Exception e) {
+            
+            logger.debug("registerNotice BoardServiceImpl Error ",e);
+            throw e;
+
+        }
+    };
+
+    @Override
+    public void deleteNotice(Long boardId){
+        try {
+            
+            boardMapper.deleteNotice(boardId);
+
+        } catch (Exception e) {
+            
+            logger.debug("deleteNotice BoardServiceImpl Error ",e);
+            throw e;
+
+        }
+    };
+
+    @Override
     public BoardDTO detailNotice(int boardId){
         try {
             
@@ -64,6 +92,8 @@ public class BoardServiceImpl implements BoardService{
         }
     };
 
+
+    
     @Override
     public void increaseCount(int boardId){
 

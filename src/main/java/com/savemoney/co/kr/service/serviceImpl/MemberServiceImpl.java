@@ -19,6 +19,14 @@ import com.savemoney.co.kr.service.MemberService;
 @Service
 public class MemberServiceImpl implements MemberService{
 
+    private static final String UPPER_CASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String LOWER_CASE = "abcdefghijklmnopqrstuvwxyz";
+    private static final String DIGITS = "0123456789";
+    private static final String SPECIAL_CHARACTERS = "!@#$%^&*()-_+=<>?";
+
+    private static final String ALL_CHARACTERS = UPPER_CASE + LOWER_CASE + DIGITS + SPECIAL_CHARACTERS;
+    private static final SecureRandom RANDOM = new SecureRandom();
+
     private static final Logger logger = LoggerFactory.getLogger(MemberServiceImpl.class);
 
     @Autowired
@@ -27,12 +35,25 @@ public class MemberServiceImpl implements MemberService{
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    public static String generatePassword(int length) {
+        if (length < 1) throw new IllegalArgumentException("Length must be greater than 0");
+
+        StringBuilder password = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int index = RANDOM.nextInt(ALL_CHARACTERS.length());
+            password.append(ALL_CHARACTERS.charAt(index));
+        }
+        return password.toString();
+    }
+
     // 멤버 insert
     @Override
     public void joinMember(MemberDTO memberDTO){
 
         try {
             
+
+
             //password를 암호화하는 수단 필요
             memberDTO.setMemberPwd(passwordEncoder.encode(memberDTO.getMemberPwd())); 
 
@@ -95,7 +116,7 @@ public class MemberServiceImpl implements MemberService{
 
             if(findPwd!=null){
 
-                StringBuffer sb = new StringBuffer();        
+                StringBuilder sb = new StringBuilder();        
                 SecureRandom sr = new SecureRandom();        
                 sr.setSeed(new Date().getTime());  
 
@@ -109,7 +130,7 @@ public class MemberServiceImpl implements MemberService{
                 }
 
                 memberPwd = sb.toString();
-                memberMapper.resetPwd(memberId, SecurityUtil.pwdEncryt(memberPwd));
+                memberMapper.resetPwd(memberId, passwordEncoder.encode(memberPwd));
 
                 return memberPwd;
 
@@ -120,10 +141,6 @@ public class MemberServiceImpl implements MemberService{
 
             }
 
-        }
-        catch (NoSuchAlgorithmException e) {
-            logger.error("findPwd Encryption algorithm not found", e);
-            throw new RuntimeException("Encryption algorithm not found", e);
         }
         catch (Exception e) {
             
@@ -162,6 +179,24 @@ public class MemberServiceImpl implements MemberService{
 
     }    
 
-    
+    @Override
+    public void updateMember(MemberDTO memberDTO){
+
+        try {
+            
+            String memberPwd = passwordEncoder.encode(memberDTO.getMemberPwd());
+            memberDTO.setMemberPwd(memberPwd);
+
+            memberMapper.updateMember(memberDTO);
+
+        } catch (Exception e) {
+
+            logger.error("updateMember Service Error",e);
+            throw e;
+
+        }
+
+    }
+
 
 }

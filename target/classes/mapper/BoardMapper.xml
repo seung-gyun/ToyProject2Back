@@ -18,6 +18,13 @@
         FROM (
             SELECT BOARDID, TITLE, MEMBERID, TO_CHAR(CREATEDDATE, 'YYYY-MM-DD') AS CREATEDDATE, VIEWCOUNT, ROW_NUMBER() OVER (ORDER BY CREATEDDATE DESC) AS RNUM
             FROM BOARD
+            ]]>
+
+            <!-- <if test="keyword != null">
+                AND KEYWORD LIKE #{keyword}
+            </if> -->
+
+            <![CDATA[
         )
         WHERE ${firstSize} <= RNUM AND RNUM <= ${lastSize}
         ]]>
@@ -38,6 +45,23 @@
         VALUES( #{title}, #{content}, #{memberId} )
 
     </insert>
+
+    <insert id="deleteNotice" parameterType="java.lang.Long">
+        
+        DELETE
+        FROM BOARD
+        WHERE BOARDID = #{boardId}
+
+    </insert>
+
+    <update id="updateNotice" parameterType="BoardDTO">
+        
+        UPDATE BOARD SET TITLE = #{title}, content = #{content}, updateddate = CURRENT_TIMESTAMP
+        where boardid = #{boardId}
+
+    </update>
+
+
 
     <update id="increaseCount" parameterType = "Integer">
         

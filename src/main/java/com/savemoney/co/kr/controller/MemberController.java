@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -108,6 +110,25 @@ public class MemberController {
         res.addCookie(JseesionIdCookie);
         
         return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @PatchMapping("/savemoney/mypage/id={memberId}")
+	public ResponseEntity<?> updateMember(@PathVariable String memberId, @RequestBody MemberDTO memberDTO) {
+        
+        try {
+        
+            memberService.updateMember(memberDTO);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.debug("updateMember Controller Error",e);
+            throw e;
+        }
+
+        
 
     }
 

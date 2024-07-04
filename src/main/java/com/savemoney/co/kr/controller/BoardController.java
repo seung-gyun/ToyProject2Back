@@ -15,8 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -78,22 +80,41 @@ public class BoardController {
 
     }
 
-    @PatchMapping("/savemoney/updatenotice")
-    public ResponseEntity<?> PatchRegisterNotice(@RequestBody Map<String, Object> noticeData) {
+    @DeleteMapping("/savemoney/deletenotice/boardid={boardid}")
+    public ResponseEntity<?> DeleteRegisterNotice(@PathVariable Long boardid) {
+        
+        try {
+            
+            boardService.deleteNotice(boardid);
+
+            return ResponseEntity.status(HttpStatus.OK).body(0);
+
+        } catch (Exception e) {
+            
+            logger.debug("PostRegisterNotice Controller Error", e);
+            throw e;
+            
+        }
+
+    }
+
+    @PatchMapping("/savemoney/updatenotice/boardid={boardid}")
+    public ResponseEntity<?> PatchRegisterNotice(@PathVariable Long boardid, @RequestBody Map<String, Object> noticeData) {
         
         try {
             
             BoardDTO boardDTO = new BoardDTO();
-
+            
             String title = noticeData.get("title").toString();
             String content = noticeData.get("content").toString();
             String memberId = noticeData.get("memberId").toString();
-            
+
+            boardDTO.setBoardId(boardid);
             boardDTO.setTitle(title);
             boardDTO.setContent(content);
             boardDTO.setMemberId(memberId);
 
-            boardService.registerNotice(boardDTO);
+            boardService.updateNotice(boardDTO);
 
 
             return ResponseEntity.status(HttpStatus.OK).body(0);

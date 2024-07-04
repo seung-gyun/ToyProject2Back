@@ -12,6 +12,8 @@ public interface BoardMapper {
 
    List<BoardDTO> boardList(int firstSize, int lastSize) throws PersistenceException;
    void registerNotice(BoardDTO boardDTO) throws PersistenceException;
+   void updateNotice(BoardDTO boardDTO) throws PersistenceException;
+   void deleteNotice(Long boardId) throws PersistenceException;
    BoardDTO detailNotice(int boardId) throws PersistenceException;
    void increaseCount(int boardId) throws PersistenceException;
    int totalBoardList() throws PersistenceException ;

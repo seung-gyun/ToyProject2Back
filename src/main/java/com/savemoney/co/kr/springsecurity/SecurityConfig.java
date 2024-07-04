@@ -117,16 +117,17 @@ public class SecurityConfig{
                 //     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 설정 안 함
                      
                 .authorizeHttpRequests(requests -> requests
-                .requestMatchers("/savemoney/board").authenticated()
-                .requestMatchers("/savemoney/registernotice").authenticated()
+                .requestMatchers("/savemoney/board**").authenticated()
+                .requestMatchers("/savemoney/registernotice**").authenticated()
+                .requestMatchers("/savemoney/mypage/**").authenticated()
                 .anyRequest().permitAll()
                 // .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
-                        .loginPage("login")
+                        .loginPage("/savemoney/login")
                         .defaultSuccessUrl("/savemoney/login", true)
                         .successHandler(customAuthenticationSuccessHandler()) // 커스텀 성공 핸들러 설정
-                        .failureHandler(customAuthenticationFailureHandler()) // 커스텀 실패 핸들러 설정정
+                        .failureHandler(customAuthenticationFailureHandler()) // 커스텀 실패 핸들러 설정
                         .permitAll()
                 ).securityContext(securityContext -> securityContext
                 .securityContextRepository(new HttpSessionSecurityContextRepository())
