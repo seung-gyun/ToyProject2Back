@@ -19,6 +19,6 @@ public interface MemberMapper {
     public String memberLogin(Map<String, String> params) throws PersistenceException;
     public CustomUserDetail findUserDetail(String memberId) throws PersistenceException;
     public void updateMember(MemberDTO memberDTO) throws PersistenceException;
-    
+    public void deleteMember(String memberId) throws PersistenceException;
 
 }

@@ -140,6 +140,8 @@ public class SecurityConfig{
                 http.addFilterBefore(customUsernamePasswordAuthenticationFilter(authenticationManager(authenticationConfiguration)), UsernamePasswordAuthenticationFilter.class);
           
 
+        
+
         return http.build();
     }
 

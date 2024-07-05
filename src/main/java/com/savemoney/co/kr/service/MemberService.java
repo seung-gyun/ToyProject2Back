@@ -13,6 +13,7 @@ public interface MemberService {
     String findDuple(String memberId);
     String findPwd(String memberId, String email);
     String memberLogin(Map<String, String> params);
-    public void updateMember(MemberDTO memberDTO);
+    void updateMember(MemberDTO memberDTO);
+    void deleteMember(String memberId);
 
 }

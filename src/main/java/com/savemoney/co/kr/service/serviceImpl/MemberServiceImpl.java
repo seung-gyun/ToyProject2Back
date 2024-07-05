@@ -198,5 +198,20 @@ public class MemberServiceImpl implements MemberService{
 
     }
 
+    @Override
+    public void deleteMember(String memberId){
+
+        try {
+            
+            memberMapper.deleteMember(memberId);
+
+        } catch (Exception e) {
+
+            logger.error("deleteMember Service Error",e);
+            throw e;
+
+        }
+
+    }
 
 }

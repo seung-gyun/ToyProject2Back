@@ -75,4 +75,12 @@
 
     </select>
 
+    <delete id="deleteMember" parameterType="String">
+        
+        DELETE
+        FROM MEMBERS
+        WHERE MEMBERID = #{memberId}
+
+    </delete>
+
 </mapper>

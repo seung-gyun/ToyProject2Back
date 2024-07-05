@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -170,6 +171,36 @@ public class MemberController {
             }
 
             
+
+        } catch (Exception e) {
+            
+            logger.debug("getfindPwd Controller Error",e);
+            throw e;
+
+        }
+		
+    }
+
+    @DeleteMapping("/savemoney/mypage/memberdelete={memberId}")
+    public ResponseEntity<?> deleteMember(@PathVariable String memberId, HttpServletResponse res) { 
+        
+        try {
+        
+            memberService.deleteMember(memberId);
+
+            //쿠키와 정보 삭제해줘야 함
+            Cookie tokenCookie = new Cookie("token", null);
+            tokenCookie.setPath("/");
+            tokenCookie.setMaxAge(0);
+    
+            Cookie JseesionIdCookie = new Cookie("JSESSIONID", null);
+            JseesionIdCookie.setPath("/");
+            JseesionIdCookie.setMaxAge(0);
+    
+            res.addCookie(tokenCookie);
+            res.addCookie(JseesionIdCookie);
+            
+            return ResponseEntity.status(HttpStatus.OK).body(0);            
 
         } catch (Exception e) {
             
