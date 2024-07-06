@@ -32,8 +32,17 @@ public class BoardController {
     @Autowired
     BoardService boardService;
 
-    @GetMapping("/savemoney/board")
-    public ResponseEntity<?> getNoticePage(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+    @GetMapping("/savemoney/securitycheck")
+    public ResponseEntity<?> getSecurityCheck() {
+
+        return ResponseEntity.status(HttpStatus.OK).body(0);
+
+    }
+
+    
+
+    @GetMapping("/savemoney/board/{currentPage}")
+    public ResponseEntity<?> getNoticePage(@PathVariable int currentPage) {
         
         try {
             
@@ -42,9 +51,11 @@ public class BoardController {
             Map<String, Object> boardListPage = new HashMap<>();
             List<BoardDTO> boardList = new ArrayList<>();
 
+            int size = 10;
+
             int totalPage = boardService.totalBoardList(memberId);
-            int firstSize = (page - 1) * size + 1;
-            int lastSize = page * size;
+            int firstSize = (currentPage - 1) * size + 1;
+            int lastSize = currentPage * size;
 
 
 
