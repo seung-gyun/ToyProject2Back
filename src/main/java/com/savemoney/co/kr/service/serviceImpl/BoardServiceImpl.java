@@ -21,10 +21,10 @@ public class BoardServiceImpl implements BoardService{
     BoardMapper boardMapper;
 
     @Override
-    public List<BoardDTO> boardList(int firstSize, int lastSize) {
+    public List<BoardDTO> boardList(int firstSize, int lastSize, String memberId) {
         try {
             
-            return boardMapper.boardList(firstSize, lastSize);
+            return boardMapper.boardList(firstSize, lastSize, memberId);
 
         } catch (Exception e) {
 
@@ -111,11 +111,11 @@ public class BoardServiceImpl implements BoardService{
     }
     
     @Override
-    public int totalBoardList(){
+    public int totalBoardList(String memberId){
 
         try {
             
-            return boardMapper.totalBoardList();
+            return boardMapper.totalBoardList(memberId);
 
         } catch (Exception e) {
             

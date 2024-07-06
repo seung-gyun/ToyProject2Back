@@ -9,22 +9,28 @@
         SELECT COUNT(*)
         FROM BOARD
 
+        <if test="memberId != null">
+            WHERE MEMBERID = #{memberId}
+        </if>
+
     </select>
 
     <select id="boardList" parameterType = "java.lang.Integer" resultType="BoardDTO">
         
         <![CDATA[
-        SELECT RNUM, BOARDID, TITLE, MEMBERID, CREATEDDATE, VIEWCOUNT
-        FROM (
-            SELECT BOARDID, TITLE, MEMBERID, TO_CHAR(CREATEDDATE, 'YYYY-MM-DD') AS CREATEDDATE, VIEWCOUNT, ROW_NUMBER() OVER (ORDER BY CREATEDDATE DESC) AS RNUM
-            FROM BOARD
+            SELECT RNUM, BOARDID, TITLE, MEMBERID, CREATEDDATE, VIEWCOUNT
+            FROM (
+                SELECT BOARDID, TITLE, MEMBERID, TO_CHAR(CREATEDDATE, 'YYYY-MM-DD') AS CREATEDDATE, VIEWCOUNT, 
+                    ROW_NUMBER() OVER (ORDER BY CREATEDDATE DESC) AS RNUM
+                FROM BOARD
+                WHERE 1=1
             ]]>
-
-            <!-- <if test="keyword != null">
-                AND KEYWORD LIKE #{keyword}
-            </if> -->
-
-            <![CDATA[
+            <if test="memberId != null">
+                <![CDATA[
+                AND MEMBERID = #{memberId}
+                ]]>
+            </if>
+        <![CDATA[
         )
         WHERE ${firstSize} <= RNUM AND RNUM <= ${lastSize}
         ]]>

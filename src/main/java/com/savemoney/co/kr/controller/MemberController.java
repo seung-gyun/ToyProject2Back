@@ -23,6 +23,7 @@ import com.savemoney.co.kr.service.MemberService;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -182,11 +183,13 @@ public class MemberController {
     }
 
     @DeleteMapping("/savemoney/mypage/memberdelete={memberId}")
-    public ResponseEntity<?> deleteMember(@PathVariable String memberId, HttpServletResponse res) { 
+    public ResponseEntity<?> deleteMember(@PathVariable String memberId, HttpServletResponse res, HttpServletRequest req) { 
         
         try {
         
             memberService.deleteMember(memberId);
+
+            req.getSession().invalidate();
 
             //쿠키와 정보 삭제해줘야 함
             Cookie tokenCookie = new Cookie("token", null);

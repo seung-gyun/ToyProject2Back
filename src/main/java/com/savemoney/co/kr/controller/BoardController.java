@@ -33,22 +33,26 @@ public class BoardController {
     BoardService boardService;
 
     @GetMapping("/savemoney/board")
-    public ResponseEntity<?> getMethodName(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<?> getNoticePage(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
         
         try {
             
+            String memberId = null;
+
             Map<String, Object> boardListPage = new HashMap<>();
             List<BoardDTO> boardList = new ArrayList<>();
 
-            int totalPage = boardService.totalBoardList();
+            int totalPage = boardService.totalBoardList(memberId);
             int firstSize = (page - 1) * size + 1;
             int lastSize = page * size;
+
+
 
             boardListPage.put("totalPage", totalPage);
             boardListPage.put("firstSize", firstSize);
             boardListPage.put("lastSize", lastSize);
 
-            boardList = boardService.boardList(firstSize, lastSize);
+            boardList = boardService.boardList(firstSize, lastSize, memberId);
             boardListPage.put("boardList", boardList);
 
             return ResponseEntity.status(HttpStatus.OK).body(boardListPage);
@@ -176,6 +180,39 @@ public class BoardController {
         } catch (Exception e) {
             
             logger.debug("getGoToDetail Controller Error", e);
+            throw e;
+            
+        }
+
+    }
+
+    @GetMapping("/savemoney/mynotice/{memberId}/{currentPage}")
+    public ResponseEntity<?> getMyNotice(@PathVariable String memberId, @PathVariable int currentPage) {
+        
+        try {
+            
+            Map<String, Object> boardListPage = new HashMap<>();
+            List<BoardDTO> boardList = new ArrayList<>();
+
+            //페이지 하나 당 개수
+            int size = 10;
+
+            int totalPage = boardService.totalBoardList(memberId);
+            int firstSize = (currentPage - 1) * size + 1;
+            int lastSize = currentPage * size;
+
+            boardListPage.put("totalPage", totalPage);
+            boardListPage.put("firstSize", firstSize);
+            boardListPage.put("lastSize", lastSize);
+
+            boardList = boardService.boardList(firstSize, lastSize, memberId);
+            boardListPage.put("boardList", boardList);
+
+            return ResponseEntity.status(HttpStatus.OK).body(boardListPage);
+
+        } catch (Exception e) {
+            
+            logger.debug("login Controller Error", e);
             throw e;
             
         }
