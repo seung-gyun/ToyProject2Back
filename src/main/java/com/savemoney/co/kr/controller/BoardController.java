@@ -32,15 +32,6 @@ public class BoardController {
     @Autowired
     BoardService boardService;
 
-    @GetMapping("/savemoney/securitycheck")
-    public ResponseEntity<?> getSecurityCheck() {
-
-        return ResponseEntity.status(HttpStatus.OK).body(0);
-
-    }
-
-    
-
     @GetMapping("/savemoney/board/{currentPage}")
     public ResponseEntity<?> getNoticePage(@PathVariable int currentPage) {
         
@@ -56,8 +47,6 @@ public class BoardController {
             int totalPage = boardService.totalBoardList(memberId);
             int firstSize = (currentPage - 1) * size + 1;
             int lastSize = currentPage * size;
-
-
 
             boardListPage.put("totalPage", totalPage);
             boardListPage.put("firstSize", firstSize);
@@ -88,7 +77,7 @@ public class BoardController {
 
         } catch (Exception e) {
             
-            logger.debug("login Controller Error", e);
+            logger.debug("goregister Controller Error", e);
             throw e;
             
         }
@@ -106,7 +95,7 @@ public class BoardController {
 
         } catch (Exception e) {
             
-            logger.debug("PostRegisterNotice Controller Error", e);
+            logger.debug("DeleteRegisterNotice Controller Error", e);
             throw e;
             
         }
@@ -136,7 +125,7 @@ public class BoardController {
 
         } catch (Exception e) {
             
-            logger.debug("PostRegisterNotice Controller Error", e);
+            logger.debug("PatchRegisterNotice Controller Error", e);
             throw e;
             
         }
@@ -223,7 +212,7 @@ public class BoardController {
 
         } catch (Exception e) {
             
-            logger.debug("login Controller Error", e);
+            logger.debug("getMyNotice Controller Error", e);
             throw e;
             
         }

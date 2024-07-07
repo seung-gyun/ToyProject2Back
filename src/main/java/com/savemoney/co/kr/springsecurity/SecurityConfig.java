@@ -25,11 +25,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import lombok.RequiredArgsConstructor;
-
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig{
     
     
@@ -128,8 +125,8 @@ public class SecurityConfig{
                 .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
-                        .loginPage("/savemoney/login")
-                        .defaultSuccessUrl("/savemoney/login", true)
+                        // .loginPage("/savemoney/login")
+                        // .defaultSuccessUrl("/savemoney/login", true)
                         .successHandler(customAuthenticationSuccessHandler()) // 커스텀 성공 핸들러 설정
                         .failureHandler(customAuthenticationFailureHandler()) // 커스텀 실패 핸들러 설정
                         .permitAll()
