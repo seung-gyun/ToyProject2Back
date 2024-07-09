@@ -16,6 +16,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         // 403 Forbidden 상태 코드를 클라이언트에게 반환
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
+        response.sendRedirect("/"+HttpServletResponse.SC_UNAUTHORIZED);
     }
 }

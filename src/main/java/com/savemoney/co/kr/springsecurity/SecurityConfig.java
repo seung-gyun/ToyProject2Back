@@ -114,14 +114,10 @@ public class SecurityConfig{
                 //     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 설정 안 함
                      
                 .authorizeHttpRequests(requests -> requests
-                .requestMatchers("/savemoney/board/**").authenticated()
-                .requestMatchers("/savemoney/registernotice/**").authenticated()
-                .requestMatchers("/savemoney/mynotice/**").authenticated()
-                .requestMatchers("/savemoney/mypage/**").authenticated()
-                .requestMatchers("/savemoney/gotodetail/**").authenticated()
-                .requestMatchers("/savemoney/updatenotice/**").authenticated()
-                .requestMatchers("/savemoney/deletenotice/**").authenticated()
-                .requestMatchers("/savemoney/mypage/**").authenticated()
+                .requestMatchers(Arrays.stream(RequestUrIEnum.values())
+                .map(RequestUrIEnum::getPattern)
+                .toArray(String[]::new))
+                .authenticated()
                 .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
