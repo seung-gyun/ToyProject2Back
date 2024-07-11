@@ -31,7 +31,7 @@
         
         SELECT MEMBERID
         FROM MEMBERS
-        WHERE MEMBERID = #{memberId} and MEMBERPWD = #{memberPwd}
+        WHERE MEMBERID = ${memberId} and MEMBERPWD = ${memberPwd}
 
     </select>
 

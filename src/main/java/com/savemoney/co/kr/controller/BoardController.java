@@ -138,7 +138,7 @@ public class BoardController {
         try {
             
             BoardDTO boardDTO = new BoardDTO();
-
+            
             String title = noticeData.get("title").toString();
             String content = noticeData.get("content").toString();
             String memberId = noticeData.get("memberId").toString();

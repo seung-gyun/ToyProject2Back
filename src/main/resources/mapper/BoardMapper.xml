@@ -32,7 +32,7 @@
             </if>
         <![CDATA[
         )
-        WHERE ${firstSize} <= RNUM AND RNUM <= ${lastSize}
+        WHERE #{firstSize} <= RNUM AND RNUM <= #{lastSize}
         ]]>
 
     </select>
