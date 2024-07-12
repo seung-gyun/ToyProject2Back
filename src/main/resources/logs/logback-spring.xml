@@ -1,13 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <!-- DEBUG 레벨용 appender 설정 -->
-    <appender name="DEBUG_FILE" class="ch.qos.logback.core.FileAppender">
-        <file>C:/ToyProject2Log/debug.log</file> <!-- DEBUG 로그 파일 경로 -->
+    <!-- DEBUG 레벨용 appender 설정 --> 
+        <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern> <!-- DEBUG 로그 포맷 -->
+            <charset>UTF-8</charset>
+            <Pattern>%d %5p [%c] %m%n</Pattern>
         </encoder>
     </appender>
+
+    <appender name="console-infolog" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <Pattern>%d %5p %m%n</Pattern>
+        </encoder>
+    </appender>
+
+    <!-- Logger -->
+    <logger name="com.savemoney" level="DEBUG" appender-ref="console" />
+    <logger name="jdbc.sqlonly" level="DEBUG" appender-ref="console-infolog" />
+    <logger name="jdbc.resultsettable" level="DEBUG" appender-ref="console-infolog" />
+
+    <!-- Root Logger -->
+    <root level="off">
+        <appender-ref ref="console" />
+    </root>
+
+    <logger name="org.apache.ibatis.logging.jdbc.BaseJdbcLogger" level="TRACE">
+        <appender-ref ref="CONSOLE"/> <!-- 콘솔 appender 사용 -->
+        <appender-ref ref="DEBUG_FILE"/> <!-- DEBUG 파일 appender 사용 -->
+    </logger>
 
     <!-- INFO 레벨용 appender 설정 -->
     <appender name="INFO_FILE" class="ch.qos.logback.core.FileAppender">
@@ -55,6 +77,12 @@
 
     <logger name="com.savmoney.co.kr" level="ERROR">
         <appender-ref ref="ERROR_FILE"/> <!-- ERROR 레벨용 파일 appender 사용 -->
+    </logger>
+
+    <!-- MyBatis SQL 로그 레벨 설정 -->
+    <logger name="org.apache.ibatis" level="DEBUG">
+        <appender-ref ref="CONSOLE"/> <!-- 콘솔 appender 사용 -->
+        <appender-ref ref="DEBUG_FILE"/> <!-- DEBUG 파일 appender 사용 -->
     </logger>
 
     <root level="INFO">
